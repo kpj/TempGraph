@@ -4,7 +4,7 @@ import serial
 import pandas as pd
 
 
-DATA_FILE = 'temps.csv'
+DATA_FILE = '../temps.csv'
 
 def main():
     if os.path.isfile(DATA_FILE):
