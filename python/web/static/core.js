@@ -18,6 +18,13 @@ class Plot {
       this.obj.data.datasets[0].data.push(ele.y);
     }
 
+    var max_data_points = 60;
+    var nr_to_splice = this.obj.data.datasets[0].data.length - max_data_points;
+
+    if(nr_to_splice > 0) {
+      this.obj.data.labels.splice(0, nr_to_splice);
+      this.obj.data.datasets[0].data.splice(0, nr_to_splice);
+    }
     this.obj.update();
   }
 

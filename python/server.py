@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def main(fname):
-    if os.path.isfile(fname):
+    if os.path.isfile(fname) and os.path.getsize(fname) > 0:
         df = pd.read_csv(fname, index_col=0)
     else:
         df = pd.DataFrame()
@@ -21,7 +21,7 @@ def main(fname):
 
         df = df.append({
             'temperature': temp,
-            'timestamp': pd.datetime.now()
+            'timestamp': pd.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }, ignore_index=True)
         df.to_csv(fname)
 
