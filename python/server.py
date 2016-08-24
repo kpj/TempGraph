@@ -4,7 +4,7 @@ import serial
 import pandas as pd
 
 
-DATA_FILE = '../temps.csv'
+DATA_FILE = './temps.csv'
 
 def main():
     if os.path.isfile(DATA_FILE):
@@ -18,6 +18,7 @@ def main():
         res = raw.decode('utf-8').rstrip('\n')
         if len(res) == 0: continue
         temp = float(res)
+        print('.', end='', flush=True)
 
         df = df.append({
             'temperature': temp,

@@ -1,9 +1,15 @@
 import json
 import pandas as pd
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 from flask import Flask, render_template
+from flask_socketio import SocketIO
 
 
 app = Flask(__name__)
+socketio = SocketIO(app, async_mode='threading')
 
 @app.route('/')
 def show_entries():
@@ -11,6 +17,9 @@ def show_entries():
 
 @app.route('/data')
 def data():
+    return get_data()
+
+def get_data():
     df = pd.read_csv('../temps.csv', index_col=0)
     return json.dumps(convert(df))
 
@@ -23,6 +32,14 @@ def convert(df):
 
     return res
 
+class FileObserver(FileSystemEventHandler):
+    def on_modified(self, event):
+        if event.src_path == '../temps.csv':
+            socketio.emit('update', get_data())
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    observer = Observer()
+    observer.schedule(FileObserver(), path='..', recursive=False)
+    observer.start()
+
+    socketio.run(app)
