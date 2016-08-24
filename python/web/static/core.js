@@ -1,6 +1,6 @@
 class Plot {
   constructor(data) {
-    var ctx = document.getElementById('chart');
+    let ctx = document.getElementById('chart');
     this.obj = new Chart(ctx, {
       type: 'line',
       data: {
