@@ -7,8 +7,12 @@ import pandas as pd
 
 def main(fname):
     if os.path.isfile(fname):
-        df = pd.read_csv(fname, index_col=0)
+        if os.path.getsize(fname) > 0:
+            df = pd.read_csv(fname, index_col=0)
+        else:
+            df = pd.DataFrame()
     else:
+        open(fname, 'w').close()
         df = pd.DataFrame()
 
     ser = serial.Serial('/dev/ttyACM0', timeout=1)
