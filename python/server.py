@@ -1,14 +1,13 @@
 import os
+import sys
 
 import serial
 import pandas as pd
 
 
-DATA_FILE = './temps.csv'
-
-def main():
-    if os.path.isfile(DATA_FILE):
-        df = pd.read_csv(DATA_FILE, index_col=0)
+def main(fname):
+    if os.path.isfile(fname):
+        df = pd.read_csv(fname, index_col=0)
     else:
         df = pd.DataFrame()
 
@@ -24,7 +23,11 @@ def main():
             'temperature': temp,
             'timestamp': pd.datetime.now()
         }, ignore_index=True)
-        df.to_csv(DATA_FILE)
+        df.to_csv(fname)
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) != 2:
+        print('Usage: {} <data file>'.format(sys.argv[0]))
+        exit(-1)
+
+    main(sys.argv[1])

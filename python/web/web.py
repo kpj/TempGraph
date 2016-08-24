@@ -1,4 +1,7 @@
+import os
+import sys
 import json
+
 import pandas as pd
 
 from watchdog.observers import Observer
@@ -20,7 +23,7 @@ def data():
     return get_data()
 
 def get_data():
-    df = pd.read_csv('../temps.csv', index_col=0)
+    df = pd.read_csv(DATA_FILE, index_col=0)
     return json.dumps(convert(df))
 
 def convert(df):
@@ -34,12 +37,19 @@ def convert(df):
 
 class FileObserver(FileSystemEventHandler):
     def on_modified(self, event):
-        if event.src_path == '../temps.csv':
+        if event.src_path == DATA_FILE:
             socketio.emit('update', get_data())
 
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Usage: {} <data file>'.format(sys.argv[0]))
+        exit(-1)
+    DATA_FILE = sys.argv[1]
+
     observer = Observer()
-    observer.schedule(FileObserver(), path='..', recursive=False)
+    observer.schedule(
+        FileObserver(),
+        path=os.path.dirname(DATA_FILE), recursive=False)
     observer.start()
 
     socketio.run(app)
