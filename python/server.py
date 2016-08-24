@@ -25,7 +25,7 @@ def main(fname):
 
         df = df.append({
             'temperature': temp,
-            'timestamp': pd.datetime.now()
+            'timestamp': pd.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }, ignore_index=True)
         df.to_csv(fname)
 
